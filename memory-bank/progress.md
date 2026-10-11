@@ -1,6 +1,8 @@
 # Progress — trip-polama
 
 ## Done
+- Deployment branch: production frontend/API serving, health endpoint, signed demo
+  access cookies, request budgets, sign-in UI and Render Blueprint/guide implemented.
 - Rebrand: app/UI/PWA/package identity is `trip-polama`; scopes use `@trip-polama`.
   Persistent database and preference keys retained for saved-data compatibility.
 - Current plan: `plans/v5-split-brain-routing.md`; v1-v4 preserved.
@@ -17,6 +19,10 @@
   - Store additions: `getTripFull`, `setWaypointVisited`.
 
 ## Verified
+- Deployment branch: 105 regressions pass; typecheck/lint/PWA build pass. Actual
+  npm start smoke verifies Render-style PORT/origin, health and frontend HTTP200,
+  anonymous planner HTTP401, sign-in HTTP200 and Secure cookie. Synthetic secrets
+  only; no paid inference or Render provisioning performed.
 - trip-polama rename: 93 regression tests pass; typecheck/lint/production PWA build
   pass. Package links verified after checkout-folder rename. Legacy storage IDs
   and saved-preference behavior retained; live suites intentionally not rerun.
@@ -66,6 +72,8 @@
 - Dev server serves the app (HTTP 200).
 
 ## Known issues
+- Render deployment not provisioned yet. Demo access is not individual account auth;
+  limits reset per instance/restart. Real browser/TLS/cold-start verification pending.
 - Latest expanded local-model run timed out intermittently and was interrupted;
   no all-green expanded live-suite claim. Deterministic reads are separate from inference.
 - Earlier deepseek-v4.1-flash HTTP 402 resolved by user switching to gemma4:31b.

@@ -108,13 +108,13 @@ npm run dev:planner
 npm run dev
 ```
 
-Vite proxies `/api/planner` to `127.0.0.1:8787`. The gateway loads `server/.env`,
+Vite proxies `/api` to `127.0.0.1:8787`. The development gateway loads `server/.env`,
 binds to loopback, accepts the configured frontend origin, limits request size and
 concurrency, and bounds research to four model rounds/six tools per request.
 If the frontend origin/port changes, set `PLANNER_ALLOWED_ORIGIN` accordingly.
-This is a **local development gateway**, not a production-authenticated service.
-Before exposing publicly, add authentication, authorization and rate/cost controls
-behind an HTTPS same-origin deployment proxy. Vite preview is not that deployment.
+Those commands run **local development**, which stays on loopback and is not for
+public exposure. For the protected production server, use the Render deployment
+guide below. Vite preview is frontend-only, not that deployment.
 
 Research uses Wikipedia destination background snippets, with retrieved source
 links/times attached to replies. Optional Brave Search adds broader web snippets.
@@ -142,8 +142,9 @@ Unconfigured/unreachable planner shows an error; local/manual management stays u
 |---|---|
 | `npm run dev` | Vite dev server |
 | `npm run dev:planner` | Loopback online planner gateway (server/.env settings) |
+| `npm start` | Production frontend + API server; requires production access configuration |
 | `npm run build` | typecheck + production build + PWA service worker |
-| `npm run preview` | serve the built app |
+| `npm run preview -w @trip-polama/web` | serve the built frontend only |
 | `npm run typecheck` | TypeScript across all workspaces |
 | `npm run lint` | ESLint |
 | `npm test` | Vitest unit tests (one-shot) |
@@ -158,7 +159,7 @@ trip-polama/
   packages/core/        # shared types + pure brain logic (tested, framework-free)
   packages/store/       # Dexie schemas + typed repo
   packages/online-brain/# open-model client + offline fallback
-  server/               # Development online planner gateway + research tools
+  server/               # Production frontend/API server, access controls and research tools
   plans/                # versioned architecture plans
   memory-bank/          # project memory (state, patterns, progress)
   .cursor/rules/        # agent rules
@@ -193,11 +194,12 @@ OLLAMA_HOST=http://localhost:11434 OLLAMA_MODEL=llama3.2:3b npm run test:live-mo
 ```
 
 These opt-in tests use synthetic trip details, call the actual local manager adapter
-and validate a summary and an expense proposal. They do not execute
+and cover summaries, older records, stops and write proposals. They do not execute
 trip mutations or access your browser's stored trips. Normal `npm test` skips them.
-The latest live manager run passed both on llama3.2:3b; replies took roughly 22-31
-seconds. Earlier constrained tests rejected unrelated extra actions, leading to
-the one-action manager policy. This is a smoke test, not a reliability guarantee.
+Earlier two-case smoke tests passed on llama3.2:3b at roughly 22-31 seconds, but the
+expanded suite later had intermittent 90-second timeouts and was interrupted.
+Do not treat it as an all-green live suite. Deterministic quick reads bypass model
+latency; natural inference remains hardware-dependent. This is not a reliability guarantee.
 Ollama receives a generated JSON schema plus low-temperature options; local
 validation and confirmation remain mandatory. CORS was checked for
 `http://localhost:5173`; different frontend origins need their own check.
@@ -213,16 +215,29 @@ npm run typecheck   # static types
 npm run lint        # lint
 ```
 
-To check offline behavior: `npm run build && npm run preview`, then toggle the
+To check offline behavior: `npm run build && npm run preview -w @trip-polama/web`, then toggle the
 network offline in DevTools.
 
-## Status
+## Render Deployment
+
+Use the `deployment` branch and [Render deployment guide](docs/render-deployment.md).
+`render.yaml` defines one Node Web Service with the built frontend, planner API,
+health checks and server-only secrets. Production online planning requires a demo
+access-password sign-in; manual tools stay public. This is shared demo access,
+not Supabase accounts or trip sync. Do not expose the unprotected development process.
+
+Build with `npm ci --include=dev && npm run build`, start with `npm start`.
+Render supplies `PORT`/`RENDER_EXTERNAL_URL`; supply the provider key, a random demo
+password and session secret in Render, never in frontend variables or the repo.
+See the guide for limits, cold starts, deployment checks and local-manager restrictions.
+
+## Current Status
 
 The app/package identity is `trip-polama`, with workspace scope `@trip-polama`.
 The existing IndexedDB identifier and local preference keys are intentionally
 unchanged so the rebrand preserves saved trips, images, conversations and setup.
 
-Current plan: [Plan v5 - Split-Brain Routing](plans/v5-split-brain-routing.md).
+Current plan on deployment branch: [Plan v7 - Protected Render Demo](plans/v7-render-deployment.md).
 Chat history and action statuses persist in IndexedDB. Confirmations use scoped
 transactions; duplicate execution and cross-trip waypoint changes are blocked.
 Local manager live inference is smoke-tested. Online planner has mocked regression

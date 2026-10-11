@@ -13,6 +13,7 @@
     "dev": "npm run dev -w @trip-polama/web",
     "dev:planner": "npm run dev -w @trip-polama/server",
     "build": "npm run build -w @trip-polama/web",
+    "start": "NODE_ENV=production node --import tsx server/src/index.ts",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
     "test": "vitest run",

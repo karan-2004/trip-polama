@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: trip-polama
+    runtime: node
+    branch: deployment
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: 20.19.2
+      - key: NODE_ENV
+        value: production
+      - key: PLANNER_BASE_URL
+        value: https://ollama.com/v1
+      - key: PLANNER_MODEL
+        value: gemma4:31b
+      - key: PLANNER_API_KEY
+        sync: false
+      - key: DEMO_ACCESS_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: PLANNER_MAX_REQUESTS_PER_HOUR
+        value: "30"

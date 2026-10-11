@@ -8,6 +8,12 @@ const trip: Trip = { id: 't', name: 'Trek', destination: 'Manali', startDate: ''
   photos: [{ id: 'p', filename: 'private.jpg', image: new Blob(['image']), ts: 1 }],
   memberLocations: [], createdAt: 1, updatedAt: 1 };
 afterEach(() => vi.unstubAllGlobals());
+it('does not invoke another agent when production planner access requires sign-in', async () => {
+  const fetcher = vi.fn().mockResolvedValue({ ok: false, status: 401 });
+  vi.stubGlobal('fetch', fetcher);
+  await expect(chatAsPlanner(history, null)).rejects.toThrow('Please sign in');
+  expect(fetcher).toHaveBeenCalledOnce();
+});
 it('provides a clarification-oriented message for invalid model proposals without exposing diagnostics', async () => {
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 502, json: async () => ({
     code: 'invalid_model_reply', requestId: 'internal-reference', error: 'Internal schema details',

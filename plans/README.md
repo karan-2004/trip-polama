@@ -27,10 +27,12 @@ history and diffs.
 | v4 | 2026-10-11 | Plan maintained test matrix, measured coverage, baseline review and CI reports | Approved by user request |
 | v5 | 2026-10-11 | Separate larger online research planner from quick local read/write manager | Approved by user clarification |
 | v6 | 2026-10-11 | Reviewed destination stops/waypoints, readable confirmations, automatic reads and multi-photo chat | Approved by user request |
+| v7 | 2026-10-11 | Protected same-origin Render demo, production serving, access controls and deployment verification | Approved deployment branch request |
 
 ## Files
 
-- [v6-reviewed-stops-and-local-reads.md](v6-reviewed-stops-and-local-reads.md) - current plan
+- [v7-render-deployment.md](v7-render-deployment.md) - current plan on deployment branch
+- [v6-reviewed-stops-and-local-reads.md](v6-reviewed-stops-and-local-reads.md) - historical plan, unchanged
 - [v5-split-brain-routing.md](v5-split-brain-routing.md) - historical plan, unchanged
 - [v4-test-coverage.md](v4-test-coverage.md) - historical plan, unchanged
 - [v3-chat-first-workspace.md](v3-chat-first-workspace.md) - historical plan, unchanged

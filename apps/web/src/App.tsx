@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { ChatHub } from './components/ChatHub';
 import type { ManualView } from '@trip-polama/core';
+import { PlannerAccess } from './components/PlannerAccess';
 const TripDetail = lazy(() => import('./components/TripDetail').then((module) => ({ default: module.TripDetail })));
 
 export type View = { type: 'list' } | { type: 'trip'; tripId: string; tab: ManualView };
@@ -38,6 +39,8 @@ export default function App() {
           </span>
         </div>
       </header>
+
+      {import.meta.env.PROD && <PlannerAccess />}
 
       {view.type === 'list' ? (
         <ChatHub onOpenManual={(tripId, tab) => setView({ type: 'trip', tripId, tab })} />

@@ -17,7 +17,9 @@ files after significant changes (see `.cursor/rules/memory-bank.mdc`).
 ## Plans
 Architecture decisions live in `plans/`, versioned as `v<N>-<slug>.md`. Never
 overwrite an old version — add a new one and log it in `plans/README.md`.
-Current plan: `plans/v6-reviewed-stops-and-local-reads.md`.
+Current plan on deployment branch: `plans/v7-render-deployment.md`.
+Production deployment instructions: `docs/render-deployment.md`. Keep planner
+calls authenticated and bounded; never disable fail-closed checks to make a deploy pass.
 
 ## Chat-First Product
 Home conversations are primary. Use planner mode before a trip exists and manager

@@ -21,6 +21,10 @@ export async function chatAsPlanner(messages: ChatMessage[], trip: Trip | null,
     signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(180000)]) : AbortSignal.timeout(180000),
   });
   if (!response.ok) {
+    if (response.status === 401) {
+      if (typeof window !== 'undefined') window.dispatchEvent(new Event('planner-access-required'));
+      throw new Error('Please sign in to use online planning. Your conversation stays saved, and trip tools remain available.');
+    }
     let code: unknown;
     try { code = (await response.json() as { code?: unknown }).code; } catch { /* Non-JSON proxy failures use the generic message. */ }
     if (code === 'invalid_model_reply' || code === 'invalid_model_action') throw new Error('I couldn’t prepare a valid trip change. Nothing was changed. Please clarify your destination and trip details, then try again.');

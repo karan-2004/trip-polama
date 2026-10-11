@@ -2,6 +2,9 @@
 
 | Path | Description |
 |---|---|
+| `server/src/http.ts` | Frontend/API serving, health checks, authenticated planner and request limits |
+| `server/src/access.ts` | Demo password comparison, signed cookies and per-instance request budgets |
+| `apps/web/src/components/PlannerAccess.tsx` | User-facing planner sign-in/sign-out and expired-session handling |
 | `server/src/planner.live.test.ts` | Opt-in real planner research smoke test, server env and synthetic context only |
 | `packages/online-brain/src/onlinePlanner.ts` | Explicit minimized-context online gateway client, no local fallback |
 | `server/src/planner.ts` | Bounded larger-model tool loop: destination/web research and source provenance |

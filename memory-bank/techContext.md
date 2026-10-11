@@ -1,6 +1,9 @@
 # Tech Context — trip-polama
 
 ## Stack
+- **Production:** Node/tsx serves apps/web/dist + same-origin API, Render PORT and
+  HTTPS origin. Demo password/session secret required; signed HTTP-only cookie.
+  .node-version/render.yaml pin Node20.19.2. Provider credentials stay server-side.
 - **Chat:** Ollama /api/chat adapter; Zod schemas infer model action types.
   Endpoint preferences saved locally, no browser API keys. WebLLM remains planned.
   Local manager uses Ollama; online planner uses a separate same-origin gateway.

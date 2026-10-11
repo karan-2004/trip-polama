@@ -4,6 +4,16 @@
 confirmed actions share the store with manual tools. Separate routes now implemented:
 online planner gateway/research tools versus local read/write manager.
 
+Deployment branch: one Node production service serves dist + API, binds Render
+PORT/0.0.0.0, exposes /healthz, and fails closed without strong demo access secrets.
+Planner calls require signed Secure/HttpOnly/SameSite cookies; manual UI stays public.
+Login/session/global limits are per-instance/in-memory, not durable spend caps.
+Render Blueprint + docs/render-deployment.md added; no live Render provisioning yet.
+Deployment verification: 105 tests, typecheck/lint/build pass; actual production
+start smoke passed health/frontend/sign-in and blocked anonymous planner calls.
+No live model calls were made for deployment checks. Render provisioning awaits
+an authorized push of the deployment branch and dashboard secret configuration.
+
 Rebrand: canonical app name `trip-polama`, package scope `@trip-polama`, class
 `TripPolamaDB`. Legacy database/preference keys stay unchanged to preserve data.
 Checkout now lives at `/home/lightning/dev/trip-polama`; restart existing dev
@@ -51,7 +61,8 @@ research/citations (~3.5s). Vite localhost:5173 proxy forwards validation reques
 to the gateway (400 on invalid payload, no extra model call). Earlier deepseek
 HTTP 402 is resolved by the user's model change. No credentials logged.
 BRAVE_SEARCH_API_KEY remains unset, so research is Wikipedia background only.
-Gateway is development/loopback-only. Full browser rendering is not tested here.
+Development gateway remains loopback-only; production serving is protected and
+binds all interfaces. Full deployed browser behavior is not verified yet.
 Latest verification: 67 regressions plus 2 live local-manager smoke tests pass;
 lint/typecheck/build pass. Live Wikipedia endpoint reachable with synthetic query.
 
@@ -79,7 +90,7 @@ shows current position and ranked stops, with focus buttons. Uses MapLibre and
 OpenFreeMap online; offline downloads remain deferred. Suggestions derive from
 updated trip state so visited stops disappear. Real WebGL/device testing pending.
 
-Current plan: `plans/v6-reviewed-stops-and-local-reads.md` (v1-v5 preserved). Photos no longer requests
+Current plan on deployment: `plans/v7-render-deployment.md` (v1-v6 preserved). Photos no longer requests
 GPS or saves/displays app location tags. Embedded GPS/location-metadata stripping
 is deferred; uploaded image bytes remain unchanged. Old stored tags are preserved.
 
