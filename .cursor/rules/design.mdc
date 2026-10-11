@@ -1,0 +1,68 @@
+---
+description: TrailBrain design system — light theme with a nature palette (sky blue + green)
+globs: "**/*.{css,tsx,ts,html,svg}"
+alwaysApply: true
+---
+# TrailBrain Design System
+
+Photo UX: never ask for filenames. Use an image file picker for uploads and a
+separate getUserMedia camera preview with a capture button. Do not use a file
+input with capture as the camera experience; browsers may ignore that hint.
+Stop all camera tracks on capture, close or unmount. Preview before saving.
+Store image blobs locally for offline use; explain any future network upload.
+
+TrailBrain uses a **light theme only**, with a natural palette that blends with the
+outdoors: **sky blue + green**. Do not introduce dark mode, new color ramps, or
+one-off hex values. Always use the CSS tokens below; extend `--token` values, never
+hard-code colors in components.
+
+<rule>
+name: trailbrain_design_system
+description: Enforce the light nature theme and palette tokens in all UI code
+filters:
+  - type: content
+    pattern: "(?i)(color|theme|palette|style|design|css|styling|dark|light)"
+  - type: file_extension
+    pattern: "\\.(css|tsx|ts|html|svg)$"
+
+actions:
+  - type: enforce
+    message: |
+      TRAILBRAIN DESIGN RULES
+
+      THEME
+      - Light theme only. No dark mode. `color-scheme: light`.
+      - Feels natural/outdoorsy: sky blue + green, airy whites.
+
+      PALETTE (CSS custom properties in apps/web/src/styles.css)
+      - --bg:        #f2f7fb   (soft sky wash)
+      - --panel:     #ffffff   (surfaces)
+      - --panel-2:   #eaf3f9   (sky tint, inputs/lists)
+      - --border:    #cfe3f0   (sky borders)
+      - --text:      #14303f   (deep forest/sky)
+      - --muted:     #5c7484   (secondary text)
+      - --accent:    #16a34a   (nature green — primary actions)
+      - --accent-2:  #22c55e   (green hover)
+      - --sky:       #2b8bc2   (sky blue — secondary actions, links)
+      - --sky-2:     #6cb5dd   (sky hover)
+      - --warn:      #d97706
+      - --danger:    #dc2626
+      - --radius:    12px
+
+      USAGE
+      - Primary buttons: green (--accent), white text.
+      - Secondary buttons / links: sky blue (--sky), white text.
+      - Active tab underline: green (--accent).
+      - Offline/local "brain" indicators: green = on, muted = off.
+      - Surfaces: white panels on the sky-wash background with sky borders.
+
+      RULES
+      - Reference tokens (var(--accent)), never literal hex in components.
+      - If a new color is genuinely needed, add it as a token here first, then use it.
+      - Update this file and apps/web/src/styles.css together.
+
+metadata:
+  priority: high
+  version: 1.0
+  enforcement: strict
+</rule>

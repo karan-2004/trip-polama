@@ -27,6 +27,12 @@ Any feature that touches a model or the network must keep working when it can't:
 - `server/` — serverless proxy (holds keys, calls open models).
 
 ## Key decisions
+- Chat-first: one persistent planner/manager conversation per trip. Schemas define
+  model tools; transactions apply confirmed actions to the manual screens' store.
+  Conversation execution/audit statuses prevent duplicate execution. Model context
+  is freshly loaded and excludes structured location fields and image bytes.
+- Photos: no device-location capture or tags. Embedded location-metadata stripping
+  is deferred in Plan v2; do not equate hidden app tags with sanitized images.
 - PWA over native (faster to ship; installable; GPS via browser).
 - Supabase for auth + Postgres + Realtime + RLS.
 - WebLLM for on-device inference (cached weights, WebGPU).

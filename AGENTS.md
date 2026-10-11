@@ -13,9 +13,16 @@ files after significant changes (see `.cursor/rules/memory-bank.mdc`).
 ## Plans
 Architecture decisions live in `plans/`, versioned as `v<N>-<slug>.md`. Never
 overwrite an old version — add a new one and log it in `plans/README.md`.
-Current plan: `plans/v1-initial-architecture.md`.
+Current plan: `plans/v4-test-coverage.md`.
+
+## Chat-First Product
+Home conversations are primary. Use planner mode before a trip exists and manager
+mode after creation. Manual tools share the same store. Follow `.cursor/rules/chat.mdc`:
+validate proposals and require confirmation. Never imply an unreachable model works.
 
 ## README
+Location UX: follow `.cursor/rules/location.mdc`. Never request manual coordinates.
+
 `README.md` is versioned with the project: update it alongside each iteration
 (scripts, structure, and status change as the build evolves).
 
@@ -25,6 +32,7 @@ Current plan: `plans/v1-initial-architecture.md`.
 - **Minimal changes** (`minimal-changes-policy.mdc`): do only what's asked.
 - **TDD** (`test-driven-development.mdc`): tests before implementation.
 - **Core files doc** (`core-files-documentation.mdc`): keep `memory-bank/coreFiles.md` current.
+- **Design system** (`design.mdc`): light theme only, nature palette (sky blue + green). Use CSS tokens in `apps/web/src/styles.css`; never hard-code colors.
 
 ## Commands
 ```bash

@@ -3,6 +3,7 @@ export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'snow';
 export type Pace = 'slow' | 'moderate' | 'fast';
 
 export interface Waypoint {
+  placeName?: string;
   id: string;
   name: string;
   lat: number;
@@ -23,6 +24,8 @@ export interface Expense {
 }
 
 export interface Photo {
+  image?: Blob;
+  placeName?: string;
   id: string;
   filename: string;
   note?: string;
@@ -32,6 +35,7 @@ export interface Photo {
 }
 
 export interface MemberLocation {
+  placeName?: string;
   name: string;
   lat: number;
   lon: number;

@@ -13,7 +13,7 @@ export default defineConfig({
         short_name: 'TrailBrain',
         description: 'Offline-first, split-brain outdoor trip manager.',
         theme_color: '#16a34a',
-        background_color: '#0b1020',
+        background_color: '#f2f7fb',
         display: 'standalone',
         start_url: '/',
       },

@@ -16,15 +16,22 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:live-model": "RUN_LIVE_MODEL=1 vitest run packages/online-brain/src/chat.live.test.ts --reporter=verbose",
     "format": "prettier --write ."
+  },
+  "overrides": {
+    "@mapbox/jsonlint-lines-primitives": "2.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/node": "^20.19.43",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
+    "fake-indexeddb": "^6.2.5",
     "globals": "^17.13.0",
+    "jsdom": "^26.1.0",
     "prettier": "^3.4.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"

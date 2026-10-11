@@ -19,7 +19,13 @@ history and diffs.
 | Version | Date | Summary | Status |
 |---|---|---|---|
 | v1 | 2026-10-11 | Initial architecture: split-brain PWA, full stack, phased roadmap | Approved |
+| v2 | 2026-10-11 | Remove photo location options; defer embedded location-metadata stripping | Approved by user request |
+| v3 | 2026-10-11 | Chat-first home, planner/manager sessions and confirmed trip actions | Approved by user request |
+| v4 | 2026-10-11 | Plan maintained test matrix, measured coverage, baseline review and CI reports | Approved by user request |
 
 ## Files
 
-- [v1-initial-architecture.md](v1-initial-architecture.md) — current plan
+- [v4-test-coverage.md](v4-test-coverage.md) - current plan
+- [v3-chat-first-workspace.md](v3-chat-first-workspace.md) - historical plan, unchanged
+- [v2-photo-privacy.md](v2-photo-privacy.md) - historical plan, unchanged
+- [v1-initial-architecture.md](v1-initial-architecture.md) - historical plan, unchanged

@@ -1,11 +1,19 @@
 # Tech Context — TrailBrain
 
 ## Stack
+- **Chat:** Ollama /api/chat adapter; Zod schemas infer model action types.
+  Endpoint preferences saved locally, no browser API keys. WebLLM remains planned.
+- **DB:** Schema v3 preserves prior records, adds chat sessions/messages and a
+  compound [tripId+name] member-location index. Manual tools use the same records.
 - **Runtime/build:** Node 20, npm 9, Vite + React + TypeScript.
 - **PWA:** `vite-plugin-pwa` (service worker + manifest).
 - **Local store:** IndexedDB via Dexie.js.
-- **Map:** MapLibre GL + PMTiles (offline vector tiles).
-- **Styling:** Tailwind CSS.
+- **Map:** MapLibre GL 6 + OpenFreeMap Liberty style (online). PMTiles/offline
+  downloads remain planned. Configurable style via VITE_MAP_STYLE_URL.
+- **Map build:** Vite-bundled MapLibre worker; jsonlint 2.0.2 override keeps the
+  transitive parser compatible with the project's Node 20 runtime.
+- **Styling:** plain CSS (single `styles.css`). Deviation from the plan's Tailwind — chosen to keep deps minimal and move fast.
+- **Design system:** light theme, nature palette (sky blue + green). See `.cursor/rules/design.mdc` for the enforced tokens.
 - **Backend:** Supabase (Auth + Postgres + Realtime + RLS); Cloudflare Worker for the LLM proxy.
 - **AI:** open-weight models — local Ollama (dev), Groq/OpenRouter (prod proxy), WebLLM (on-device).
 - **P2P:** WebRTC DataChannel (manual signaling).

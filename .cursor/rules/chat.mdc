@@ -1,0 +1,21 @@
+---
+description: Chat is TrailBrain's primary planner/manager interface
+globs: "**/*.{ts,tsx}"
+alwaysApply: true
+---
+# Chat-First Product
+
+- Home focuses on one persistent conversation per trip; exploration can start
+  before creation. Keep history through planner-to-manager transition.
+- Manual screens use the same local store and stay accessible from chat.
+- Model tools require strict runtime schemas, scoped execution, explicit
+  confirmation/dismissal and tests. Prompts are not a security boundary.
+- Never run arbitrary model code, accept model-supplied trip IDs, fabricate
+  coordinates/media or bypass device permissions.
+- Commit mutations and execution status atomically to prevent duplicate actions.
+- Load fresh trip context before every model request, including manual edits.
+- Label proposed versus completed changes; only local results prove success.
+- Keep model connection explicit. Network availability does not mean readiness.
+- Structured images/GPS fields are omitted from model context. User-authored
+  message text is transmitted as written to the selected endpoint.
+- Photos stay location-free. Embedded metadata stripping is still deferred.

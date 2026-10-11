@@ -1,4 +1,5 @@
 import Dexie, { type Table } from 'dexie';
+import type { ChatSession, ChatMessage } from '@trailbrain/core';
 import type {
   TripRow,
   WaypointRow,
@@ -13,6 +14,8 @@ export class TrailBrainDB extends Dexie {
   expenses!: Table<ExpenseRow, string>;
   photos!: Table<PhotoRow, string>;
   memberLocations!: Table<MemberLocationRow, string>;
+  chatSessions!: Table<ChatSession, string>;
+  chatMessages!: Table<ChatMessage, string>;
 
   constructor(name = 'trailbrain') {
     super(name);
@@ -23,6 +26,11 @@ export class TrailBrainDB extends Dexie {
       photos: 'id, tripId, ts',
       memberLocations: 'id, tripId, name, ts',
     });
+    this.version(2).stores({
+      chatSessions: 'id, &tripId, updatedAt',
+      chatMessages: 'id, sessionId, ts',
+    });
+    this.version(3).stores({ memberLocations: 'id, tripId, name, ts, [tripId+name]' });
   }
 }
 

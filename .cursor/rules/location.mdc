@@ -1,0 +1,33 @@
+---
+description: Device location UX; never ask users to enter coordinates
+globs: "apps/web/**"
+alwaysApply: true
+---
+# Location UX
+
+- Photos are exempt from location capture: no location controls, geolocation
+  requests, auto-tagging or saved-location display in the photo flow.
+- Removing photo location UI does not strip embedded image metadata. That is
+  deferred work in `plans/v2-photo-privacy.md`; never claim it is implemented.
+
+- Display human-readable place names, never raw coordinates. Coordinates remain
+  internal for positioning and distance calculations. Offline fallback labels
+  must not invent names. Save resolved names with records for offline display.
+- Current place-name lookup is opt-in and sends the device fix to BigDataCloud.
+  Never call its client endpoint for historical or other members' coordinates.
+
+- Never provide manual latitude or longitude inputs, including error fallbacks.
+- Capture current location using browser geolocation, with user permission.
+- Show locating, accuracy, unavailable, and permission-denied states with retry.
+- Do not silently substitute dummy coordinates or reuse a failed refresh's position.
+- Current device location is not another member's live location. Remote positions
+  require that member's device to share them with consent.
+- Destination selection will use place search or map interaction, not coordinates;
+  do not substitute current location for a remote destination.
+- Waypoints support map click/center selection as an alternative to GPS. Next-stop
+  maps show device position and named suggestions. Never present map pins or
+  straight-line distance estimates as verified walking routes.
+- Map tiles currently require OpenFreeMap network access. Keep attribution visible
+  and do not claim offline map downloads until that feature is implemented.
+- Browser geolocation requires HTTPS or localhost. One-shot check-ins are not
+  continuous tracking; never describe them as background tracking.
