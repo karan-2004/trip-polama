@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { ChatHub } from './components/ChatHub';
-import type { ManualView } from '@trailbrain/core';
+import type { ManualView } from '@trip-polama/core';
 const TripDetail = lazy(() => import('./components/TripDetail').then((module) => ({ default: module.TripDetail })));
 
 export type View = { type: 'list' } | { type: 'trip'; tripId: string; tab: ManualView };
@@ -28,7 +28,7 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <h1>TrailBrain</h1>
+          <h1>trip-polama</h1>
           <span className="tagline">split-brain trip manager</span>
         </div>
         <div className="brains">

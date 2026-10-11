@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { agentActionSchema, chatReplySchema } from './chat';
+import { agentActionSchema, chatReplySchema, managerReplySchema, sessionAgent } from './chat';
 
 describe('agent action validation', () => {
+  it('defaults legacy saved sessions to manager and exploratory sessions to planner', () => {
+    expect(sessionAgent({ id: 's', title: 'Idea', updatedAt: 1 })).toBe('planner');
+    expect(sessionAgent({ id: 's', title: 'Trip', tripId: 't', updatedAt: 1 })).toBe('manager');
+    expect(sessionAgent({ id: 's', title: 'Trip', tripId: 't', activeAgent: 'planner', updatedAt: 1 })).toBe('planner');
+  });
+  it('does not allow the local manager to create new trips', () => {
+    expect(managerReplySchema.safeParse({ reply: 'Create', actions: [{ type: 'create_trip', name: 'Trip', destination: 'Hills',
+      startDate: '', endDate: '', currency: 'INR', members: [] }] }).success).toBe(false);
+  });
   it('accepts complete trip creation and typed expense proposals', () => {
     expect(agentActionSchema.safeParse({ type: 'create_trip', name: 'Trek', destination: 'Manali',
       startDate: '2026-10-12', endDate: '2026-10-15', currency: 'INR', members: ['A', 'B'] }).success).toBe(true);

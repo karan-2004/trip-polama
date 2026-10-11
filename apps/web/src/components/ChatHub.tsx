@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import type { ChatSession, ManualView } from '@trailbrain/core';
-import { createPlanningChat, ensureTripChat, listChatSessions } from '@trailbrain/store';
+import type { ChatSession, ManualView } from '@trip-polama/core';
+import { createPlanningChat, ensureTripChat, listChatSessions } from '@trip-polama/store';
 import { TripList } from './TripList';
 import { TripChat } from './TripChat';
 
 export function ChatHub({ onOpenManual }: { onOpenManual: (tripId: string, view: ManualView) => void }) {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
+  // Existing active-chat key is a data-compatibility identifier, not branding.
   const [selected, setSelected] = useState<string>(() => localStorage.getItem('trailbrain-active-chat') ?? '');
   const [revision, setRevision] = useState(0);
   const [error, setError] = useState<string | null>(null);

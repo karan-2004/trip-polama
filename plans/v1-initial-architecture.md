@@ -1,4 +1,4 @@
-# TrailBrain — Plan v1: Initial Architecture
+# trip-polama — Plan v1: Initial Architecture
 
 **Version:** v1 · **Date:** 2026-10-11 · **Status:** Approved
 
@@ -43,7 +43,7 @@ backcountry.
 ## Repo structure
 
 ```
-trailbrain/
+trip-polama/
   package.json          # npm workspaces
   apps/web/             # Vite + React PWA
   packages/core/        # shared types + pure brain logic (framework-free, tested)

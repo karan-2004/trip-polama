@@ -1,7 +1,9 @@
-# Progress — TrailBrain
+# Progress — trip-polama
 
 ## Done
-- Current plan: `plans/v4-test-coverage.md`; v1/v2/v3 preserved.
+- Rebrand: app/UI/PWA/package identity is `trip-polama`; scopes use `@trip-polama`.
+  Persistent database and preference keys retained for saved-data compatibility.
+- Current plan: `plans/v5-split-brain-routing.md`; v1-v4 preserved.
 - Repo governance installed: `plans/`, `.cursor/rules/`, `memory-bank/`, `.gitignore`, `AGENTS.md`, `README.md`.
 - **Phase 0–1 complete:** monorepo, PWA shell, core brain logic + Dexie store + online-brain planner; verified green.
 - **Local-brain UI (first working slice):**
@@ -15,6 +17,27 @@
   - Store additions: `getTripFull`, `setWaypointVisited`.
 
 ## Verified
+- trip-polama rename: 93 regression tests pass; typecheck/lint/production PWA build
+  pass. Package links verified after checkout-folder rename. Legacy storage IDs
+  and saved-preference behavior retained; live suites intentionally not rerun.
+- Planner creation fix: 74 regression tests and three live Gemma cases pass;
+  lint/typecheck/build pass. Name-only input now clarifies missing destination;
+  full creation details produce a valid pending proposal. Malformed envelopes
+  get one bounded correction; Markdown outer fences stripped without loosening
+  validation. No trip writes performed by live smoke tests.
+- Live online planner now passes on gemma4:31b (user-configured Ollama Cloud).
+  Real destination research produces three Wikipedia sources/citations and no
+  writes. Direct test ~4.7s; running gateway HTTP 200 ~3.5s. Vite proxy validated
+  using malformed input (400, no additional inference). Synthetic trip context only.
+- Current split build: 67 regression tests pass; 2 opt-in live manager tests pass.
+  Lint/typecheck (including server) and production build pass. Wikipedia endpoint
+  returned live results for a synthetic Manali query. Online larger-model calls
+  remain mocked until provider settings are supplied.
+- Split routing: separate local manager and online planner request paths, persisted
+  replanning role, no hidden fallback and shared chat history. Gateway research
+  validation/budgets tested with mocks. Real gateway returns 503 when unconfigured
+  and 403 for an untrusted origin. Live local manager summary/expense pass (22-31s
+  warm run); initial unrelated-action outputs rejected, now one-action replies.
 - Real llama3.2:3b smoke test: exploration (no actions), complete creation and
   manager expense proposals all pass via the actual adapter. Synthetic data only;
   no mutations executed. CORS allows localhost:5173. Replies approximately 30-47s.
@@ -43,6 +66,13 @@
 - Dev server serves the app (HTTP 200).
 
 ## Known issues
+- Latest expanded local-model run timed out intermittently and was interrupted;
+  no all-green expanded live-suite claim. Deterministic reads are separate from inference.
+- Earlier deepseek-v4.1-flash HTTP 402 resolved by user switching to gemma4:31b.
+  Access is confirmed for this account/run, not a claim of unlimited free use.
+- Online planner live research verified; broader itinerary/replanning and browser
+  interaction tests still needed. Public auth/rate/cost hardening not implemented;
+  gateway binds loopback. Local manager still takes seconds, not instant replies.
 - Test coverage documentation/reporting is planned in v4, not implemented.
   Passing test counts are recorded; statement/branch/function/line percentages
   are not measured yet. Baseline review precedes threshold decisions.

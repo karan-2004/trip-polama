@@ -2,10 +2,10 @@
 import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
-import type { Trip, Waypoint } from '@trailbrain/core';
+import type { Trip, Waypoint } from '@trip-polama/core';
 import { Suggest } from './Suggest';
 
-vi.mock('@trailbrain/store', () => ({ setWaypointVisited: vi.fn().mockResolvedValue(undefined) }));
+vi.mock('@trip-polama/store', () => ({ setWaypointVisited: vi.fn().mockResolvedValue(undefined) }));
 vi.mock('../hooks/useLocation', () => ({ useGeolocation: () => ({ lat: 32, lon: 77, accuracy: 10,
   loading: false, error: null, placeName: 'Camp', locate: vi.fn(), resolveName: vi.fn() }) }));
 vi.mock('./TripMap', () => ({ TripMap: ({ waypoints, focusedId }: { waypoints: Waypoint[]; focusedId?: string }) =>

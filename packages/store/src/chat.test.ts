@@ -1,10 +1,11 @@
 import 'fake-indexeddb/auto';
 import Dexie from 'dexie';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import type { AgentAction } from '@trailbrain/core';
-import { db, TrailBrainDB } from './db';
+import type { AgentAction } from '@trip-polama/core';
+import { db, TripPolamaDB } from './db';
 import { createTrip, getTripFull } from './repo';
-import { createPlanningChat, ensureTripChat, saveChatMessage, listChatMessages, confirmChatAction, dismissChatAction } from './chat';
+import { createPlanningChat, ensureTripChat, saveChatMessage, listChatMessages, confirmChatAction, dismissChatAction, setSessionAgent, saveChatPhotos } from './chat';
+import { sessionAgent } from '@trip-polama/core';
 
 beforeEach(async () => { await db.open(); });
 afterEach(async () => {
@@ -19,6 +20,58 @@ const creation: AgentAction = { type: 'create_trip', name: 'Trek', destination: 
   startDate: '', endDate: '', currency: 'INR', members: ['A', 'B'] };
 
 describe('persistent trip conversations', () => {
+  it('creates selected sourced waypoints atomically with the reviewed trip', async () => {
+    const session = await createPlanningChat();
+    const spot = { id: 'wiki:2', name: 'Temple', lat: 32.01, lon: 77.01, sourceUrl: 'https://en.wikipedia.org/wiki/Temple', retrievedAt: '2026-10-11T12:00:00Z' };
+    const message = await saveChatMessage({ sessionId: session.id, role: 'assistant', content: 'Review the trip and stop', spots: [spot],
+      actions: [{ ...creation, spotIds: ['wiki:2'] }], actionStatuses: ['pending'] });
+    const result = await confirmChatAction(session.id, message.id, 0, undefined, { selectedSpotIds: ['wiki:2'] });
+    expect((await getTripFull(result.tripId))?.waypoints[0]).toMatchObject({ name: 'Temple', lat: 32.01, sourceUrl: spot.sourceUrl });
+    expect(await db.waypoints.count()).toBe(1);
+  });
+  it('rolls back creation when a selected stop is not in this conversation', async () => {
+    const session = await createPlanningChat();
+    const message = await proposal(session.id, creation);
+    await expect(confirmChatAction(session.id, message.id, 0, undefined, { selectedSpotIds: ['unknown'] })).rejects.toThrow('not part');
+    expect(await db.trips.count()).toBe(0);
+    expect((await db.chatMessages.get(message.id))?.actionStatuses).toEqual(['pending']);
+  });
+  it('auto-executes reads without changing trip data and rejects automatic writes', async () => {
+    const trip = await createTrip({ name: 'Trek', destination: '', startDate: '', endDate: '', currency: 'INR', members: ['A'] });
+    const session = await ensureTripChat(trip.id);
+    const read = await proposal(session.id, { type: 'read_trip', section: 'members' });
+    await confirmChatAction(session.id, read.id, 0, undefined, { readOnly: true });
+    expect((await db.trips.get(trip.id))?.updatedAt).toBe(trip.updatedAt);
+    const write = await proposal(session.id, { type: 'add_member', name: 'B' });
+    await expect(confirmChatAction(session.id, write.id, 0, undefined, { readOnly: true })).rejects.toThrow('confirmation');
+    expect((await db.trips.get(trip.id))?.members).toEqual(['A']);
+  });
+  it('saves multi-photo chat batches locally with album links and no location tags', async () => {
+    const trip = await createTrip({ name: 'Trek', destination: '', startDate: '', endDate: '', currency: 'INR', members: [] });
+    const session = await ensureTripChat(trip.id);
+    const message = await saveChatPhotos(session.id, [new File(['one'], 'one.jpg', { type: 'image/jpeg' }), new File(['two'], 'two.png', { type: 'image/png' })], 'Camp');
+    expect(message.photoIds).toHaveLength(2);
+    const photos = (await getTripFull(trip.id))!.photos;
+    expect(photos).toHaveLength(2);
+    expect(await photos.find((photo) => photo.filename === 'one.jpg')!.image!.text()).toBe('one');
+    expect(photos[0]).not.toHaveProperty('lat');
+    expect(photos[0]).not.toHaveProperty('placeName');
+    const planning = await createPlanningChat();
+    await expect(saveChatPhotos(planning.id, [new File(['x'], 'x.jpg', { type: 'image/jpeg' })])).rejects.toThrow('Create a trip');
+    expect(await db.photos.count()).toBe(2);
+  });
+  it('persists explicit replanning mode and resets to manager on creation', async () => {
+    const session = await createPlanningChat();
+    expect(sessionAgent(session)).toBe('planner');
+    await expect(setSessionAgent(session.id, 'manager')).rejects.toThrow('Create a trip');
+    const message = await proposal(session.id, creation);
+    await confirmChatAction(session.id, message.id, 0);
+    expect(sessionAgent((await db.chatSessions.get(session.id))!)).toBe('manager');
+    await setSessionAgent(session.id, 'planner');
+    db.close(); await db.open();
+    expect(sessionAgent((await db.chatSessions.get(session.id))!)).toBe('planner');
+    expect(await listChatMessages(session.id)).toHaveLength(2);
+  });
   it('creates a trip only after confirmation, keeps the chat and prevents double execution', async () => {
     const session = await createPlanningChat();
     await saveChatMessage({ sessionId: session.id, role: 'user', content: 'Plan a trek' });
@@ -86,7 +139,7 @@ describe('persistent trip conversations', () => {
     const legacy = new Dexie(databaseName);
     legacy.version(1).stores({ trips: 'id, updatedAt', waypoints: 'id, tripId, visited',
       expenses: 'id, tripId, ts', photos: 'id, tripId, ts', memberLocations: 'id, tripId, name, ts' });
-    const upgraded = new TrailBrainDB(databaseName);
+    const upgraded = new TripPolamaDB(databaseName);
     try {
       await legacy.open();
       await legacy.table('trips').add({ id: 'old', name: 'Saved trek', updatedAt: 1 });

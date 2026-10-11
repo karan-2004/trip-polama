@@ -1,4 +1,4 @@
-import type { Expense, MemberLocation, Photo, Waypoint } from '@trailbrain/core';
+import type { Expense, MemberLocation, Photo, Waypoint } from '@trip-polama/core';
 
 export interface TripRow {
   id: string;

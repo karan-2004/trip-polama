@@ -1,4 +1,4 @@
-# TrailBrain - Plan v2: Photo Privacy
+# trip-polama - Plan v2: Photo Privacy
 
 **Version:** v2 | **Date:** 2026-10-11 | **Status:** Approved by user request
 
@@ -39,7 +39,7 @@ stripping is planned for a later iteration, not implemented in this version.
 ## Structure
 
 ```text
-trailbrain/
+trip-polama/
   apps/web/               React PWA and device integrations
   packages/core/          Domain types and deterministic logic
   packages/store/         Dexie schemas and repository APIs

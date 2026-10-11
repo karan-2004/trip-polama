@@ -1,4 +1,4 @@
-import type { Trip } from '@trailbrain/core';
+import type { Trip } from '@trip-polama/core';
 
 export interface TripPlan {
   itinerary: string[];

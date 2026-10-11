@@ -1,11 +1,18 @@
-# System Patterns — TrailBrain
+# System Patterns — trip-polama
 
 ## Split-brain architecture
-One local data store, two independent brains:
-- **LocalBrain** — deterministic, offline, framework-free pure functions (suggestions, settlement).
-- **OnlineBrain** — open-model client with a deterministic fallback.
-
-Both write to the same local store; the online brain is optional enrichment, never a hard dependency.
+One local data store, two distinct model routes and shared validated tools:
+- **Online planner**: larger LLM plus online research tools; source-backed planning
+  and explicit replanning. Server-configured OpenAI-compatible provider; Wikipedia
+  destination research and optional Brave search, with source links/timestamps.
+- **Local manager**: lightweight local agent for chat-based reads/writes, summaries
+  and quick responses; deterministic functions handle arithmetic and ranking.
+- Manual controls share the same commands/data. Writes require confirmation;
+  local reads need no mutation approval. No silent cloud escalation for management.
+- Separate routes: online via /api/planner/chat, local via explicit Ollama manager.
+  Session role persists; creation selects manager. No cross-agent error fallback.
+- Manager uses compact recent history/context and one requested action per reply.
+- Planner gateway is loopback development-only; public auth/deployment is pending.
 
 ## Local-first sync
 - IndexedDB (Dexie) is the source of truth on-device.
@@ -16,7 +23,8 @@ Both write to the same local store; the online brain is optional enrichment, nev
 ## Deterministic fallback everywhere
 Any feature that touches a model or the network must keep working when it can't:
 - On-device model unavailable → heuristics.
-- Open model unreachable → templated offline plan.
+- Online planner unreachable -> explicit unavailable state, cached plans/manual
+  creation still usable. A template is not live researched planning.
 - No signal → all local-brain features still work.
 
 ## Monorepo layout

@@ -1,4 +1,4 @@
-import type { Trip } from '@trailbrain/core';
+import type { Trip } from '@trip-polama/core';
 import { db } from './db';
 import type {
   TripRow,

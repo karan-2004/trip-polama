@@ -1,6 +1,10 @@
-# AGENTS.md — TrailBrain
+# AGENTS.md — trip-polama
 
 Project instructions for AI agents (and humans) working in this repo.
+
+App name: `trip-polama`; package scope: `@trip-polama`; database class: `TripPolamaDB`.
+Legacy persisted storage IDs are compatibility identifiers, not branding. Preserve
+them unless implementing an explicit tested data migration.
 
 ## Always do first
 Read the memory bank before making changes:
@@ -13,12 +17,18 @@ files after significant changes (see `.cursor/rules/memory-bank.mdc`).
 ## Plans
 Architecture decisions live in `plans/`, versioned as `v<N>-<slug>.md`. Never
 overwrite an old version — add a new one and log it in `plans/README.md`.
-Current plan: `plans/v4-test-coverage.md`.
+Current plan: `plans/v6-reviewed-stops-and-local-reads.md`.
 
 ## Chat-First Product
 Home conversations are primary. Use planner mode before a trip exists and manager
 mode after creation. Manual tools share the same store. Follow `.cursor/rules/chat.mdc`:
 validate proposals and require confirmation. Never imply an unreachable model works.
+Planner means a larger online LLM with resource-access tools. Manager means a
+lightweight local agent for trip reads/writes, summaries and quick responses.
+Do not substitute one shared model with two prompts for the target architecture.
+Before creation, suggest sourced destination stops and save reviewed selections
+as waypoints. Confirm writes using readable values, never JSON. Reads need no
+approval; ground retrieval/summaries in saved records. Chat images stay local.
 
 ## README
 Location UX: follow `.cursor/rules/location.mdc`. Never request manual coordinates.

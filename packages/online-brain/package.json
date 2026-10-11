@@ -1,5 +1,5 @@
 {
-  "name": "@trailbrain/online-brain",
+  "name": "@trip-polama/online-brain",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@trailbrain/core": "*"
+    "@trip-polama/core": "*"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { createTrip, listTrips } from '@trailbrain/store';
-import type { TripRow } from '@trailbrain/store';
+import { createTrip, listTrips } from '@trip-polama/store';
+import type { TripRow } from '@trip-polama/store';
 
 export function TripList({ onOpen, refreshKey = 0 }: { onOpen: (tripId: string) => void; refreshKey?: number }) {
   const [trips, setTrips] = useState<TripRow[]>([]);

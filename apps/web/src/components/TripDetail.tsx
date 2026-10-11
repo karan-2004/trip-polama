@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getTripFull } from '@trailbrain/store';
-import type { Trip } from '@trailbrain/core';
-import type { ManualView } from '@trailbrain/core';
+import { getTripFull } from '@trip-polama/store';
+import type { Trip } from '@trip-polama/core';
+import type { ManualView } from '@trip-polama/core';
 import { Waypoints } from './Waypoints';
 import { Expenses } from './Expenses';
 import { Suggest } from './Suggest';

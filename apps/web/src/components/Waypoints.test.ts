@@ -2,11 +2,11 @@
 import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
-import { addWaypoint } from '@trailbrain/store';
-import type { Trip } from '@trailbrain/core';
+import { addWaypoint } from '@trip-polama/store';
+import type { Trip } from '@trip-polama/core';
 import { Waypoints } from './Waypoints';
 
-vi.mock('@trailbrain/store', () => ({ addWaypoint: vi.fn().mockResolvedValue({}), setWaypointVisited: vi.fn() }));
+vi.mock('@trip-polama/store', () => ({ addWaypoint: vi.fn().mockResolvedValue({}), setWaypointVisited: vi.fn() }));
 vi.mock('../hooks/useLocation', () => ({ useGeolocation: () => ({ lat: null, lon: null, loading: false, error: null, locate: vi.fn(), resolveName: vi.fn() }) }));
 vi.mock('./TripMap', () => ({ TripMap: ({ onSelect }: { onSelect: (point: { lat: number; lon: number }) => void }) =>
   createElement('button', { type: 'button', onClick: () => onSelect({ lat: 32, lon: 77 }) }, 'Select map stop') }));

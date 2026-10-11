@@ -1,8 +1,13 @@
-# Tech Context — TrailBrain
+# Tech Context — trip-polama
 
 ## Stack
 - **Chat:** Ollama /api/chat adapter; Zod schemas infer model action types.
   Endpoint preferences saved locally, no browser API keys. WebLLM remains planned.
+  Local manager uses Ollama; online planner uses a separate same-origin gateway.
+  Active role and message role/model/source provenance persist in IndexedDB.
+- **Planner gateway:** Node20/tsx loopback dev service, server/.env credentials,
+  OpenAI-compatible model/tools/schema API. Wikipedia research plus optional Brave;
+  four-round/six-tool budget, timeout and origin checks. Public auth is pending.
 - **DB:** Schema v3 preserves prior records, adds chat sessions/messages and a
   compound [tripId+name] member-location index. Manual tools use the same records.
 - **Runtime/build:** Node 20, npm 9, Vite + React + TypeScript.

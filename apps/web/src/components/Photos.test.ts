@@ -2,11 +2,11 @@
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { addPhoto } from '@trailbrain/store';
-import type { Trip } from '@trailbrain/core';
+import { addPhoto } from '@trip-polama/store';
+import type { Trip } from '@trip-polama/core';
 import { Photos } from './Photos';
 
-vi.mock('@trailbrain/store', () => ({ addPhoto: vi.fn().mockResolvedValue({}) }));
+vi.mock('@trip-polama/store', () => ({ addPhoto: vi.fn().mockResolvedValue({}) }));
 const trip: Trip = {
   id: 'trip', name: 'Trail', destination: 'Hills', startDate: '', endDate: '',
   currency: 'INR', members: [], waypoints: [], expenses: [], memberLocations: [],

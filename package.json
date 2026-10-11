@@ -1,8 +1,8 @@
 {
-  "name": "trailbrain",
+  "name": "trip-polama",
   "version": "0.1.0",
   "private": true,
-  "description": "TrailBrain — an offline-first, split-brain trip manager for outdoor trips.",
+  "description": "trip-polama — an offline-first, split-brain trip manager for outdoor trips.",
   "type": "module",
   "workspaces": [
     "apps/*",
@@ -10,13 +10,15 @@
     "server"
   ],
   "scripts": {
-    "dev": "npm run dev -w @trailbrain/web",
-    "build": "npm run build -w @trailbrain/web",
+    "dev": "npm run dev -w @trip-polama/web",
+    "dev:planner": "npm run dev -w @trip-polama/server",
+    "build": "npm run build -w @trip-polama/web",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:live-model": "RUN_LIVE_MODEL=1 vitest run packages/online-brain/src/chat.live.test.ts --reporter=verbose",
+    "test:live-planner": "RUN_LIVE_PLANNER=1 node --env-file-if-exists=server/.env node_modules/vitest/vitest.mjs run server/src/planner.live.test.ts --reporter=verbose",
     "format": "prettier --write ."
   },
   "overrides": {
@@ -33,6 +35,7 @@
     "globals": "^17.13.0",
     "jsdom": "^26.1.0",
     "prettier": "^3.4.2",
+    "tsx": "^4.23.15",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }

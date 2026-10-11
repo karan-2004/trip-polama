@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
-import type { Trip } from '@trailbrain/core';
-import { haversineKm } from '@trailbrain/core';
-import { upsertMemberLocation } from '@trailbrain/store';
+import type { Trip } from '@trip-polama/core';
+import { haversineKm } from '@trip-polama/core';
+import { upsertMemberLocation } from '@trip-polama/store';
 import { useGeolocation } from '../hooks/useLocation';
 import { LocationField } from './LocationField';
 

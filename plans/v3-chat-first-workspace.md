@@ -1,10 +1,10 @@
-# TrailBrain - Plan v3: Chat-First Workspace
+# trip-polama - Plan v3: Chat-First Workspace
 
 **Version:** v3 | **Date:** 2026-10-11 | **Status:** Approved by user request
 
 ## Goal
 
-The heart of TrailBrain is a persistent conversation per trip. New/exploratory
+The heart of trip-polama is a persistent conversation per trip. New/exploratory
 conversations are planners; created trips have managers. Manual tools remain
 available and share the same local data. The timeline remains a no-rush build.
 

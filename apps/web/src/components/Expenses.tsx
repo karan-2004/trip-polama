@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
-import type { Trip } from '@trailbrain/core';
-import { summarizeExpenses, suggestTransfers } from '@trailbrain/core';
-import { addExpense } from '@trailbrain/store';
+import type { Trip } from '@trip-polama/core';
+import { summarizeExpenses, suggestTransfers } from '@trip-polama/core';
+import { addExpense } from '@trip-polama/store';
 
 const CATEGORIES = ['food', 'transport', 'stay', 'gear', 'permits', 'other'];
 

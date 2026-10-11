@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { fallbackPlan } from './planner';
-import type { Trip } from '@trailbrain/core';
+import type { Trip } from '@trip-polama/core';
 
 const trip: Trip = {
   id: 't1',

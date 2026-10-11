@@ -1,4 +1,4 @@
-# TrailBrain
+# trip-polama
 
 An offline-first, **split-brain** trip planner/manager for outdoor trips — built to
 get people off the screen and into the world, with **open-source AI at its core**.
@@ -38,6 +38,17 @@ npm run dev        # start dev server → http://localhost:5173
 
 ## Trip Chat
 
+**Implemented routing:** the planner uses a server-configured larger online LLM with resource-access tools
+for source-backed trip research and planning. The manager uses a lightweight local
+model to read/write trip data, give summaries and respond quickly. Existing trips
+can explicitly request online replanning without losing their manager conversation.
+
+New/exploratory chats use the online planner gateway. Saved trips default to the
+local manager. **Research / Replan online** and **Return to local manager** switch
+agents explicitly in the same persistent conversation. Messages retain role/model
+provenance and retrieved source links. Local failures never silently use the cloud.
+The online provider/model still needs configuration; it is not auto-selected.
+
 Home centers on a persistent conversation, with trips alongside it. Use **Plan
 a new adventure** to explore without creating a trip. Confirmed creation links
 that chat to the trip and switches it to manager mode. Selecting an existing trip
@@ -49,7 +60,7 @@ check-ins, visited stops, next-stop calculations and opening manual screens.
 Photos/camera and remote map selection still need device/manual interaction.
 Both interfaces share the store, and each reply gets fresh trip context.
 
-### Connect a Model
+### Connect the Local Manager
 
 Install/start [Ollama](https://ollama.com/) separately and pull an open model:
 
@@ -58,25 +69,79 @@ ollama pull llama3.2:3b
 ollama serve
 ```
 
-In **Model connection**, set the reachable endpoint (usually
-`http://localhost:11434`) and installed model name. Optional defaults are
-`VITE_OLLAMA_URL` and `VITE_OLLAMA_MODEL` in `apps/web/.env.local`.
+Developer configuration: set `VITE_OLLAMA_URL` (usually
+`http://localhost:11434`) and `VITE_OLLAMA_MODEL` in `apps/web/.env.local`, then
+restart Vite. Previously saved local connection preferences remain supported.
+Connection forms and developer setup instructions are not part of the product UI.
 If CORS blocks requests, allow the frontend origin using `OLLAMA_ORIGINS` when
 starting the server. On a phone, localhost means the phone, not your development
 computer; HTTPS/mixed-content and network access must also be configured.
 
-The app does not install/download a model. Ollama is a separate server, not an
-in-browser model; WebLLM remains planned. Without a reachable model, chats stay
-saved and manual tools work; no simulated replies are generated. Model requests
-send message text and structured trip details, excluding structured GPS fields
-and images. Message text is sent as written. No live browsing, booking or automatic
-sharing is performed.
+The app does not install/download a model. Ollama is a separate local server, not
+in-browser WebLLM. Use a trusted local endpoint. The manager gets compact recent
+history, expense aggregates and saved trip data; it has no web research. It proposes
+at most one requested action per reply for reliability. Writes await confirmation.
+Latest warm local tests took about 22-31 seconds, still not instant. WebLLM and
+further latency optimization remain planned.
+
+### Connect the Online Planner
+
+Create `server/.env` using the names in `server/.env.example` and configure:
+
+```dotenv
+PLANNER_BASE_URL=https://your-provider.example/v1
+PLANNER_MODEL=your-larger-model
+PLANNER_API_KEY=your-server-only-key
+# Optional, for broader web search instead of only destination background:
+BRAVE_SEARCH_API_KEY=your-server-only-search-key
+```
+
+The provider must support OpenAI-compatible chat completions, function tools and
+JSON-schema responses. Choose a larger model explicitly. Keys stay server-side,
+never in `VITE_*`, browser settings or commits. No hosted model calls occur until
+you configure and request them.
+
+Run the gateway and frontend in separate terminals:
+
+```bash
+npm run dev:planner
+npm run dev
+```
+
+Vite proxies `/api/planner` to `127.0.0.1:8787`. The gateway loads `server/.env`,
+binds to loopback, accepts the configured frontend origin, limits request size and
+concurrency, and bounds research to four model rounds/six tools per request.
+If the frontend origin/port changes, set `PLANNER_ALLOWED_ORIGIN` accordingly.
+This is a **local development gateway**, not a production-authenticated service.
+Before exposing publicly, add authentication, authorization and rate/cost controls
+behind an HTTPS same-origin deployment proxy. Vite preview is not that deployment.
+
+Research uses Wikipedia destination background snippets, with retrieved source
+links/times attached to replies. Optional Brave Search adds broader web snippets.
+No automated booking, payments, verified live availability or dedicated weather
+feed is implemented. Research can fail; the agent must say so rather than invent it.
+
+Planner responses are schema-validated. A trip-name-only request should ask for
+the destination with no change proposal. If a model returns malformed actions,
+the gateway permits one correction attempt within its existing round budget;
+it never executes or silently accepts invalid actions. A single outer Markdown
+JSON fence is tolerated, but incomplete fields or arbitrary embedded JSON are not.
+Failed requests include a reference ID and classified code in the network response;
+server diagnostics log those identifiers, not chat text, credentials or raw replies.
+
+Online requests send conversation text and a minimized planning context (destination,
+dates, currency, group and named stops); they do not attach expense records, private
+waypoint notes, structured GPS or images. Prior chat text may itself contain private
+details, and is sent as written when you explicitly use the online planner.
+Queries also reach research providers. Review what you share when replanning.
+Unconfigured/unreachable planner shows an error; local/manual management stays usable.
 
 ## Scripts
 
 | Command | What it does |
 |---|---|
 | `npm run dev` | Vite dev server |
+| `npm run dev:planner` | Loopback online planner gateway (server/.env settings) |
 | `npm run build` | typecheck + production build + PWA service worker |
 | `npm run preview` | serve the built app |
 | `npm run typecheck` | TypeScript across all workspaces |
@@ -88,12 +153,12 @@ sharing is performed.
 ## Project structure
 
 ```
-trailbrain/
+trip-polama/
   apps/web/             # Vite + React PWA
   packages/core/        # shared types + pure brain logic (tested, framework-free)
   packages/store/       # Dexie schemas + typed repo
   packages/online-brain/# open-model client + offline fallback
-  server/               # Cloudflare Worker: LLM proxy (later phases)
+  server/               # Development online planner gateway + research tools
   plans/                # versioned architecture plans
   memory-bank/          # project memory (state, patterns, progress)
   .cursor/rules/        # agent rules
@@ -103,6 +168,22 @@ trailbrain/
 
 ### Live Model Smoke Test
 
+For the configured online planner (may consume provider usage):
+
+```bash
+npm run test:live-planner
+```
+
+This loads `server/.env` and tests name-only clarification, complete creation
+proposals and synthetic destination research through the
+actual planner logic. Normal tests skip it. Model availability in the provider's
+listing does not guarantee your account has inference access. HTTP 402 means paid
+access/credit is required; the app reports it without retrying or switching agents.
+Latest online run: `gemma4:31b` on Ollama Cloud completed Wikipedia-backed research
+in about 4.7 seconds. The running gateway also returned HTTP 200 in about 3.5 seconds.
+Access worked for the configured account; this does not establish unlimited/free
+eligibility for other models or accounts. Broader web search is not configured.
+
 With Ollama running and `llama3.2:3b` installed:
 
 ```bash
@@ -111,11 +192,12 @@ npm run test:live-model
 OLLAMA_HOST=http://localhost:11434 OLLAMA_MODEL=llama3.2:3b npm run test:live-model
 ```
 
-These opt-in tests use synthetic trip details, call the actual chat adapter and
-validate exploration, trip creation and expense proposals. They do not execute
+These opt-in tests use synthetic trip details, call the actual local manager adapter
+and validate a summary and an expense proposal. They do not execute
 trip mutations or access your browser's stored trips. Normal `npm test` skips them.
-The latest live run passed all three on llama3.2:3b; replies took roughly 30-47
-seconds. This is a smoke test, not a guarantee across prompts or devices.
+The latest live manager run passed both on llama3.2:3b; replies took roughly 22-31
+seconds. Earlier constrained tests rejected unrelated extra actions, leading to
+the one-action manager policy. This is a smoke test, not a reliability guarantee.
 Ollama receives a generated JSON schema plus low-temperature options; local
 validation and confirmation remain mandatory. CORS was checked for
 `http://localhost:5173`; different frontend origins need their own check.
@@ -136,10 +218,16 @@ network offline in DevTools.
 
 ## Status
 
-Current plan: [Plan v4 - Test Coverage](plans/v4-test-coverage.md).
+The app/package identity is `trip-polama`, with workspace scope `@trip-polama`.
+The existing IndexedDB identifier and local preference keys are intentionally
+unchanged so the rebrand preserves saved trips, images, conversations and setup.
+
+Current plan: [Plan v5 - Split-Brain Routing](plans/v5-split-brain-routing.md).
 Chat history and action statuses persist in IndexedDB. Confirmations use scoped
 transactions; duplicate execution and cross-trip waypoint changes are blocked.
-Live inference, physical device tests and account sync remain pending.
+Local manager live inference is smoke-tested. Online planner has mocked regression
+tests plus live Gemma/Wikipedia research and HTTP gateway checks.
+Physical-device tests and account sync remain pending.
 
 Waypoints has an interactive MapLibre map: tap/click to select a stop, or pan
 and use "Select map center", then name and save it. GPS is an alternative,
@@ -173,4 +261,5 @@ on-device model inference are not implemented yet.
 See [`memory-bank/progress.md`](memory-bank/progress.md) and
 [`plans/`](plans/) for the current phase and roadmap. The build currently covers the
 monorepo scaffold, PWA shell, core brain logic (settlement + suggestions), Dexie
-store, and the online-brain planner with a deterministic offline fallback.
+store, separate local/online chat routes and a bounded research gateway. Local
+management does not silently substitute the online planner (or vice versa).

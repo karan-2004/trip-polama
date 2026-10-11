@@ -1,5 +1,5 @@
 {
-  "name": "@trailbrain/store",
+  "name": "@trip-polama/store",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@trailbrain/core": "*",
+    "@trip-polama/core": "*",
     "dexie": "^4.0.10"
   },
   "devDependencies": {

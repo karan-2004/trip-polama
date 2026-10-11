@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Map as LibreMap, Marker, Popup, NavigationControl, LngLatBounds, setWorkerUrl } from 'maplibre-gl';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import type { Waypoint } from '@trailbrain/core';
+import type { Waypoint } from '@trip-polama/core';
 
 setWorkerUrl(workerUrl);
 

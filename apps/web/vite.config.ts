@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'TrailBrain',
-        short_name: 'TrailBrain',
+        name: 'trip-polama',
+        short_name: 'trip-polama',
         description: 'Offline-first, split-brain outdoor trip manager.',
         theme_color: '#16a34a',
         background_color: '#f2f7fb',
@@ -22,5 +22,5 @@ export default defineConfig({
       },
     }),
   ],
-  server: { port: 5173 },
+  server: { port: 5173, proxy: { '/api/planner': 'http://127.0.0.1:8787' } },
 });

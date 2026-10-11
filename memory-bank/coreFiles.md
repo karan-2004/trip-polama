@@ -1,7 +1,11 @@
-# Core Files — TrailBrain
+# Core Files — trip-polama
 
 | Path | Description |
 |---|---|
+| `server/src/planner.live.test.ts` | Opt-in real planner research smoke test, server env and synthetic context only |
+| `packages/online-brain/src/onlinePlanner.ts` | Explicit minimized-context online gateway client, no local fallback |
+| `server/src/planner.ts` | Bounded larger-model tool loop: destination/web research and source provenance |
+| `server/src/index.ts` | Loopback development gateway with server keys, origin/body/concurrency/timeout limits |
 | `packages/online-brain/src/chat.live.test.ts` | Opt-in real Ollama smoke tests with synthetic data, no mutations |
 | `apps/web/src/components/ChatHub.tsx` | Home workspace: trip chats and exploratory sessions |
 | `apps/web/src/components/TripChat.tsx` | Persistent chat, model settings, action confirmation and manual tool navigation |
@@ -19,7 +23,7 @@
 | `packages/core/src/settle.ts` | `summarizeExpenses`, `computeNetBalances`, `suggestTransfers` |
 | `packages/core/src/suggest.ts` | `suggestNext` — offline next-waypoint ranking (weather/daylight/elevation/pace) |
 | `packages/store/src/entities.ts` | Row types (add `tripId` to core entities) |
-| `packages/store/src/db.ts` | `TrailBrainDB` Dexie schema (5 tables) |
+| `packages/store/src/db.ts` | `TripPolamaDB` Dexie schema, legacy database ID retained |
 | `packages/store/src/repo.ts` | Typed CRUD + `getTripFull` + `setWaypointVisited` |
 | `packages/online-brain/src/planner.ts` | `planTrip` (open-model) + `fallbackPlan` (offline) |
 | `apps/web/src/App.tsx` | Shell: offline + split-brain indicators, view routing |

@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import type { Trip } from '@trailbrain/core';
-import { addPhoto } from '@trailbrain/store';
+import type { Trip } from '@trip-polama/core';
+import { addPhoto } from '@trip-polama/store';
 import { PhotoPreview } from './PhotoPreview';
 import { validatePhoto } from './photoInput';
 import { CameraCapture } from './CameraCapture';

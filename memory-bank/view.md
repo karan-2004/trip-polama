@@ -1,4 +1,4 @@
-# View — TrailBrain (architecture)
+# View — trip-polama (architecture)
 
 ```
 ┌────────────────────────── PWA (React + TS, installable) ──────────────────────────┐

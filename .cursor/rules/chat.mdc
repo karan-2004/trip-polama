@@ -1,9 +1,37 @@
 ---
-description: Chat is TrailBrain's primary planner/manager interface
+description: Chat is trip-polama's primary planner/manager interface
 globs: "**/*.{ts,tsx}"
 alwaysApply: true
 ---
 # Chat-First Product
+
+- Before trip creation, recommend sourced nearby spots and review selected stops;
+  save them as waypoints in the same transaction. Never generate coordinates with an LLM.
+- Mutation confirmations show labeled human-readable data, not JSON, schema keys
+  or internal IDs. Read-only retrieval/calculation/navigation must not ask approval.
+- Model-generated read prose is not authoritative. Retrieve/format actual saved
+  records; use deterministic aggregates. Compact intent selection and known quick
+  commands keep latency low. Never auto-execute a write via the read path.
+- The chat image icon supports multi-select local photo batches with previews.
+  Never send image bytes to models or add photo location tags.
+
+- Split model roles: planner uses a larger online LLM with controlled research
+  tools and source-backed recommendations; manager uses a lightweight local model
+  for trip reads/writes, summaries and quick actions. Different prompts alone
+  are not the intended split. Resource access requires actual tools.
+- Existing-trip management must not silently escalate to cloud inference. Allow
+  explicit online Research/Replan while preserving the same conversation.
+- Planner provider/model is configured server-side through PLANNER_* settings;
+  manager uses its separately configured local Ollama endpoint. Keep credentials
+  out of browser code. Online gateway currently binds to loopback for development;
+  do not expose publicly without auth, rate limits and deployment hardening.
+- Planner research tools are bounded, allowlisted reads. Display retrieved source
+  URLs/times; Wikipedia snippets are not live weather/fares/availability. Optional
+  Brave search enables broader research. Do not invent tools or source provenance.
+- Local manager replies allow zero or one requested action to limit unrelated
+  mutations from small models. Summaries use no actions; all writes still need approval.
+- Read-only local tools can run automatically; mutations require confirmation.
+  Measure manager latency and keep deterministic calculations outside the model.
 
 - Home focuses on one persistent conversation per trip; exploration can start
   before creation. Keep history through planner-to-manager transition.

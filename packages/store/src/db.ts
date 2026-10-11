@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie';
-import type { ChatSession, ChatMessage } from '@trailbrain/core';
+import type { ChatSession, ChatMessage } from '@trip-polama/core';
 import type {
   TripRow,
   WaypointRow,
@@ -8,7 +8,7 @@ import type {
   MemberLocationRow,
 } from './entities';
 
-export class TrailBrainDB extends Dexie {
+export class TripPolamaDB extends Dexie {
   trips!: Table<TripRow, string>;
   waypoints!: Table<WaypointRow, string>;
   expenses!: Table<ExpenseRow, string>;
@@ -17,6 +17,7 @@ export class TrailBrainDB extends Dexie {
   chatSessions!: Table<ChatSession, string>;
   chatMessages!: Table<ChatMessage, string>;
 
+  // Keep the persisted database ID so the rebrand retains existing user data.
   constructor(name = 'trailbrain') {
     super(name);
     this.version(1).stores({
@@ -34,4 +35,4 @@ export class TrailBrainDB extends Dexie {
   }
 }
 
-export const db = new TrailBrainDB();
+export const db = new TripPolamaDB();

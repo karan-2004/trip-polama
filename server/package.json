@@ -1,7 +1,12 @@
 {
-  "name": "@trailbrain/server",
+  "name": "@trip-polama/server",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Serverless proxy for open-model calls and (later) sync. Placeholder for Phase 4+."
+  "description": "Local development gateway for the larger online planner and research tools.",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env --import tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": { "@trip-polama/core": "*", "zod": "^4.6.5" }
 }

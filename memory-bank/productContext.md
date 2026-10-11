@@ -1,4 +1,4 @@
-# Product Context — TrailBrain
+# Product Context — trip-polama
 
 **Who it's for:** hikers, trekkers, and outdoor groups going to remote/hill-station
 areas with little or no signal.

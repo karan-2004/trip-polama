@@ -3,6 +3,7 @@ export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'snow';
 export type Pace = 'slow' | 'moderate' | 'fast';
 
 export interface Waypoint {
+  sourceUrl?: string;
   placeName?: string;
   id: string;
   name: string;

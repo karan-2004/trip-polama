@@ -1,13 +1,37 @@
-# Active Context — TrailBrain
+# Active Context — trip-polama
 
 **Current focus:** Chat-first home, persistent planner/manager sessions and
-confirmed actions share the local store with manual tools. Live Ollama testing next.
+confirmed actions share the store with manual tools. Separate routes now implemented:
+online planner gateway/research tools versus local read/write manager.
+
+Rebrand: canonical app name `trip-polama`, package scope `@trip-polama`, class
+`TripPolamaDB`. Legacy database/preference keys stay unchanged to preserve data.
+Checkout now lives at `/home/lightning/dev/trip-polama`; restart existing dev
+processes after the folder/package rename. Rename verification: 93 regressions,
+typecheck, lint and full PWA build pass; no live inference rerun for the rename.
+Latest richer local-model run had intermittent 90s timeouts and was interrupted;
+do not claim that expanded live suite passed. Deterministic quick reads remain valid.
+
+Planner failure reproduced after name-only creation: model returned a function/
+parameters envelope with incomplete fields. Fixed prompt/action examples, one
+bounded output correction, and single-fence handling with strict schema validation.
+Three live cases pass (clarification, full proposal, research); no mutations.
+Safe error codes/reference IDs and content-free server logs added. Running gateway
+needs a restart to load source changes; frontend retains plain-language errors.
+
+Product UI correction: removed developer setup panels and model endpoint forms.
+About your trip assistants explains roles, source checking and privacy in plain
+language. Configuration stays in README/env settings; saved local preferences
+still load. Persistent design rule prohibits variable names/commands/routes in UI.
 
 **State:** Monorepo, PWA shell, core logic, Dexie store, online-brain planner, and a
 first working local-brain UI (trips, waypoints, expenses + settlement, suggestions,
 people check-ins, photos) are all built and verified green.
 
 **Next steps (in order):**
+0. Online planner configured and live-tested with gemma4:31b on Ollama Cloud.
+   Next test richer itinerary/creation/replanning prompts in the browser.
+  Full local tool-result follow-up loop and manager latency still need work.
 0. Planned test visibility work: docs/testing.md matrix, Vitest coverage baseline,
    documented exclusions and CI artifacts. No provider/thresholds configured yet.
 1. Live model smoke test complete: llama3.2:3b at localhost:11434. Next verify actual
@@ -21,6 +45,24 @@ people check-ins, photos) are all built and verified green.
 
 **Blocked by:** no live model connection blocker now. User installed llama3.2:3b;
 Ollama responds and allows http://localhost:5173 CORS. No model installation by agent.
+User switched the online planner to gemma4:31b on Ollama Cloud. Direct live smoke
+test passed (~4.7s); restarted HTTP gateway returns 200 with actual Wikipedia
+research/citations (~3.5s). Vite localhost:5173 proxy forwards validation requests
+to the gateway (400 on invalid payload, no extra model call). Earlier deepseek
+HTTP 402 is resolved by the user's model change. No credentials logged.
+BRAVE_SEARCH_API_KEY remains unset, so research is Wikipedia background only.
+Gateway is development/loopback-only. Full browser rendering is not tested here.
+Latest verification: 67 regressions plus 2 live local-manager smoke tests pass;
+lint/typecheck/build pass. Live Wikipedia endpoint reachable with synthetic query.
+
+Split implementation: persisted explicit Research/Replan role, manager handoff
+after creation, separate request routes, stored role/model/source provenance.
+No auto-fallback across agents. Planner sends minimized context and uses a bounded
+OpenAI-compatible research loop (Wikipedia/optional Brave); keys stay server-side.
+Local manager context is compact, permits at most one requested action. Two live
+manager checks pass after rejecting unnecessary actions; warm times 22-31s,
+first attempt slower. Online research now has both mock regressions and live
+Gemma/Wikipedia checks; no trip mutations executed by the live tests.
 
 Chat iteration: planner sessions persist before creation, then link to a trip;
 existing trips reuse one manager chat. Strict schemas and scoped transactions
@@ -37,7 +79,7 @@ shows current position and ranked stops, with focus buttons. Uses MapLibre and
 OpenFreeMap online; offline downloads remain deferred. Suggestions derive from
 updated trip state so visited stops disappear. Real WebGL/device testing pending.
 
-Current plan: `plans/v4-test-coverage.md` (v1/v2/v3 preserved). Photos no longer requests
+Current plan: `plans/v6-reviewed-stops-and-local-reads.md` (v1-v5 preserved). Photos no longer requests
 GPS or saves/displays app location tags. Embedded GPS/location-metadata stripping
 is deferred; uploaded image bytes remain unchanged. Old stored tags are preserved.
 

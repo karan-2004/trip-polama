@@ -1,10 +1,10 @@
-# TrailBrain - Plan v4: Test Coverage and Documentation
+# trip-polama - Plan v4: Test Coverage and Documentation
 
 **Version:** v4 | **Date:** 2026-10-11 | **Status:** Approved by user request
 
 ## Goal
 
-TrailBrain centers on a persistent conversation per trip. New/exploratory chats
+trip-polama centers on a persistent conversation per trip. New/exploratory chats
 are planners; created trips have managers. Manual tools share the same local data.
 The no-rush build now includes maintained testing documentation and measured code
 coverage, clearly separated from test counts and live-device verification.
