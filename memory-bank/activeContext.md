@@ -1,19 +1,19 @@
 # Active Context — TrailBrain
 
-**Current focus:** Phase 0–1 — repo scaffold, PWA shell, data model, Dexie store, CI.
+**Current focus:** Phase 2 — spike WebLLM on-device model for the local brain.
 
-**What's happening right now:**
-- Project governance is being set up (plans/, .cursor/rules/, memory-bank/).
-- No source code exists yet — the repo is a fresh git repo with only docs/rules.
+**State:** Phase 0–1 is complete and verified (typecheck/lint/test/build all green).
+The monorepo, PWA shell, core brain logic, Dexie store, and online-brain planner exist.
 
 **Next steps (in order):**
-1. Finish governance: AGENTS.md.
-2. Scaffold npm-workspaces monorepo (apps/web, packages/core, packages/store, packages/online-brain, server).
-3. `apps/web`: Vite + React + TS + `vite-plugin-pwa`.
-4. `packages/core`: types + pure brain logic (settle, haversine/suggest) + Vitest tests.
-5. `packages/store`: Dexie schemas + typed API.
-6. Root ESLint/Prettier/tsconfig + CI.
-7. Verify typecheck/lint/test green.
+1. Spike (Phase 2): run a small open model on-device via WebLLM for local suggestions.
+   - Deterministic `suggestNext` fallback already exists, so the spike is low-risk.
+   - Verify suggestions work with and without WebGPU.
+2. Spike (Phase 3): WebRTC manual-signal P2P for offline buddy tracking.
+3. Phase 4: Supabase auth + sync engine + RLS.
+4. Phase 5: local brain UI features (expenses, map, suggestions, photos, check-ins).
+5. Phase 6: online brain UI (planning) + proxy.
+6. Phase 7: PWA polish + E2E offline tests + Lighthouse.
 
 **Blocked by:** nothing.
 

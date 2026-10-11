@@ -1,0 +1,7 @@
+{
+  "name": "@trailbrain/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Serverless proxy for open-model calls and (later) sync. Placeholder for Phase 4+."
+}

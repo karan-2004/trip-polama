@@ -1,10 +1,14 @@
 # Core Files — TrailBrain
 
-No source files yet (Phase 0). This file will be updated as `packages/` and
-`apps/web` source files are created.
-
 | Path | Description |
 |---|---|
-| `plans/` | Versioned architecture plans |
-| `.cursor/rules/` | Installed agent rules (memory-bank, atomic-tasks, plan/act, TDD, etc.) |
-| `memory-bank/` | Project memory (this folder) |
+| `packages/core/src/types.ts` | Domain types: Trip, Waypoint, Expense, Photo, MemberLocation, enums |
+| `packages/core/src/geo.ts` | `haversineKm` great-circle distance |
+| `packages/core/src/settle.ts` | `summarizeExpenses`, `computeNetBalances`, `suggestTransfers` |
+| `packages/core/src/suggest.ts` | `suggestNext` — offline next-waypoint ranking (weather/daylight/elevation/pace) |
+| `packages/store/src/entities.ts` | Row types (add `tripId` to core entities) |
+| `packages/store/src/db.ts` | `TrailBrainDB` Dexie schema (5 tables) |
+| `packages/store/src/repo.ts` | Typed CRUD: trips, waypoints, expenses, photos, member locations |
+| `packages/online-brain/src/planner.ts` | `planTrip` (open-model) + `fallbackPlan` (offline) |
+| `apps/web/src/App.tsx` | Minimal app shell (wires `@trailbrain/core`) |
+| `apps/web/vite.config.ts` | Vite + React + `vite-plugin-pwa` config |
