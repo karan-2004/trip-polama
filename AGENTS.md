@@ -15,6 +15,10 @@ Architecture decisions live in `plans/`, versioned as `v<N>-<slug>.md`. Never
 overwrite an old version — add a new one and log it in `plans/README.md`.
 Current plan: `plans/v1-initial-architecture.md`.
 
+## README
+`README.md` is versioned with the project: update it alongside each iteration
+(scripts, structure, and status change as the build evolves).
+
 ## Conventions (installed in `.cursor/rules/`)
 - **Plan/Act modes** (`core.mdc`): plan first, act only after approval.
 - **Atomic tasks** (`atomic-task-planning.mdc`): break work into the smallest steps, execute one at a time.
